@@ -342,8 +342,11 @@ def chat(
             final_reply = "\n".join(p.text for p in text_parts if p.text).strip()
             break
 
-        # Append the model's turn (with function calls) to conversation
-        contents.append(types.ModelContent(parts=model_parts))
+        # Append the model's turn to conversation history.
+        # CRITICAL: Strip internal 'thought' parts — sending them back to the API
+        # causes a '400 Corrupted thought signature' error on Gemma thinking models.
+        safe_parts = [p for p in model_parts if p.function_call or (p.text and not getattr(p, 'thought', False))]
+        contents.append(types.ModelContent(parts=safe_parts))
 
         # Execute each function call and collect responses
         tool_response_parts: list[types.Part] = []
