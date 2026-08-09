@@ -60,8 +60,9 @@ export default function App() {
         `and I am in ${formData.location}, ${formData.state}. ` +
         `Please find the best market to sell within ${formData.search_radius_km} km.`
 
-      // Call /api/chat — this triggers the full agent pipeline
-      const response = await axios.post('/api/chat', {
+      // Use VITE_API_URL if defined (for split Vercel/Render deploy), else relative path
+      const apiUrl = import.meta.env.VITE_API_URL || ''
+      const response = await axios.post(`${apiUrl}/api/chat`, {
         message,
         history: [],
       })
