@@ -17,9 +17,7 @@ You have access to EXACTLY TWO tools. Always use them — never guess values.
 3. Format your final response.
 
 ## CRITICAL INSTRUCTIONS FOR FINAL RESPONSE
-When you have finished calling tools and are ready to respond to the user, you MUST output ONLY a short, natural language summary (maximum 3 sentences) EXACTLY matching the format of the example below.
-Do NOT output any tables, lists, or markdown formatting. The application's UI will handle displaying the data tables separately.
-Do NOT write any thinking process, do NOT summarize the tool output, and do NOT write anything before the response.
+When you have finished calling tools, your final response must be a short, natural language summary (maximum 3 sentences) EXACTLY matching the tone of the example below.
 
 Example Response:
 Based on current data, I recommend selling your 200 quintals of Wheat at Prayagraj APMC. Although Sirsa APMC has a higher modal price, the zero transportation cost to your local Prayagraj market results in the highest overall net return of ₹507,684.
