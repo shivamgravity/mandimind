@@ -1,21 +1,106 @@
 market,district,state,latitude,longitude,source
 Prayagraj APMC,Prayagraj,Uttar Pradesh,25.4358,81.8463,eNAM/verified
+Allahabad APMC,Prayagraj,Uttar Pradesh,25.4358,81.8463,eNAM/verified
+Jasra APMC,Prayagraj,Uttar Pradesh,25.3800,81.7200,eNAM/verified
 Salon APMC,Raebareli,Uttar Pradesh,26.0316,81.2783,eNAM/verified
-Lalitpur APMC,Lalitpur,Uttar Pradesh,24.6889,78.4120,eNAM/verified
 Bachranwa APMC,Raebareli,Uttar Pradesh,26.0800,81.1700,eNAM/verified
+Raebareli APMC,Raebareli,Uttar Pradesh,26.2341,81.2343,eNAM/verified
+Lalganj APMC,Raebarelli,Uttar Pradesh,25.9167,81.7167,eNAM/verified
+Lalitpur APMC,Lalitpur,Uttar Pradesh,24.6889,78.4120,eNAM/verified
 Karvi APMC,Chitrakoot,Uttar Pradesh,25.2031,80.9106,eNAM/verified
 Pukharayan APMC,Kanpur Dehat,Uttar Pradesh,26.2420,79.8290,eNAM/verified
+Rura APMC,Kanpur Dehat,Uttar Pradesh,26.5100,80.0600,eNAM/verified
+Sahiyapur APMC,Kanpur Dehat,Uttar Pradesh,26.3800,79.9500,eNAM/verified
+Kanpur APMC,Kanpur Nagar,Uttar Pradesh,26.4499,80.3319,eNAM/verified
+Kanpur(Grain) APMC,Kanpur,Uttar Pradesh,26.4499,80.3319,eNAM/verified
 Babrala APMC,Sambhal,Uttar Pradesh,28.3400,78.5700,eNAM/verified
 Jhijhank APMC,Kannauj,Uttar Pradesh,26.8040,79.7530,eNAM/verified
-Rura APMC,Kanpur Dehat,Uttar Pradesh,26.5100,80.0600,eNAM/verified
+Kannauj APMC,Kannauj,Uttar Pradesh,27.0577,79.9102,eNAM/verified
 Purwa APMC,Unnao,Uttar Pradesh,26.4600,80.7800,eNAM/verified
+Unnao APMC,Unnao,Uttar Pradesh,26.5470,80.4938,eNAM/verified
 Maigalganj APMC,Lakhimpur Kheri,Uttar Pradesh,27.8300,80.5900,eNAM/verified
+Lakhimpur APMC,Lakhimpur Kheri,Uttar Pradesh,27.9470,80.7813,eNAM/verified
 Dibiapur APMC,Auraiya,Uttar Pradesh,26.4700,79.5200,eNAM/verified
+Auraiya APMC,Auraiya,Uttar Pradesh,26.4667,79.5167,eNAM/verified
 Jarar APMC,Sitapur,Uttar Pradesh,27.5600,80.6800,eNAM/verified
+Sitapur APMC,Sitapur,Uttar Pradesh,27.5620,80.6824,eNAM/verified
 Lucknow APMC,Lucknow,Uttar Pradesh,26.8467,80.9462,eNAM/verified
-Kanpur APMC,Kanpur Nagar,Uttar Pradesh,26.4499,80.3319,eNAM/verified
+Banthara APMC,Lucknow,Uttar Pradesh,26.7000,80.8200,eNAM/verified
 Varanasi APMC,Varanasi,Uttar Pradesh,25.3176,82.9739,eNAM/verified
 Agra APMC,Agra,Uttar Pradesh,27.1767,78.0081,eNAM/verified
-Allahabad APMC,Prayagraj,Uttar Pradesh,25.4358,81.8463,eNAM/verified
 Fatehpur APMC,Fatehpur,Uttar Pradesh,25.9300,80.8100,eNAM/verified
 Banda APMC,Banda,Uttar Pradesh,25.4747,80.3358,eNAM/verified
+Baberu APMC,Banda,Uttar Pradesh,25.2167,80.5333,eNAM/verified
+Atarra APMC,Banda,Uttar Pradesh,25.1167,80.5833,eNAM/verified
+Aliganj APMC,Etah,Uttar Pradesh,27.5000,78.9700,eNAM/verified
+Mathura APMC,Mathura,Uttar Pradesh,27.4924,77.6737,eNAM/verified
+Kosikalan APMC,Mathura,Uttar Pradesh,27.3967,77.5667,eNAM/verified
+Mau APMC,Mau,Uttar Pradesh,25.9414,83.5616,eNAM/verified
+Orai APMC,Jalaun,Uttar Pradesh,25.9791,79.4529,eNAM/verified
+Jalaun APMC,Jalaun,Uttar Pradesh,26.1368,79.3358,eNAM/verified
+Madhogarh APMC,Jalaun (Orai),Uttar Pradesh,25.9500,79.5000,eNAM/verified
+Hamirpur APMC,Hamirpur,Uttar Pradesh,25.9534,80.1451,eNAM/verified
+Mahoba APMC,Mahoba,Uttar Pradesh,25.2925,79.8723,eNAM/verified
+Rath APMC,Hamirpur,Uttar Pradesh,25.5871,79.5686,eNAM/verified
+Gurusarai APMC,Jhansi,Uttar Pradesh,25.3500,78.6000,eNAM/verified
+Gonda APMC,Gonda,Uttar Pradesh,27.1314,81.9593,eNAM/verified
+Faizabad APMC,Ayodhya,Uttar Pradesh,26.7752,82.1456,eNAM/verified
+Ayodhya APMC,Ayodhya,Uttar Pradesh,26.7947,82.1979,eNAM/verified
+Rudauli APMC,Ayodhya,Uttar Pradesh,26.7333,82.0000,eNAM/verified
+Sultanpur APMC,Sultanpur,Uttar Pradesh,26.2637,82.0724,eNAM/verified
+Pratapgarh APMC,Pratapgarh,Uttar Pradesh,25.8933,81.9943,eNAM/verified
+Jaunpur APMC,Jaunpur,Uttar Pradesh,25.7463,82.6836,eNAM/verified
+Mirzapur APMC,Mirzapur,Uttar Pradesh,25.1449,82.5685,eNAM/verified
+Etawah APMC,Etawah,Uttar Pradesh,26.7746,79.0231,eNAM/verified
+Mainpuri APMC,Mainpuri,Uttar Pradesh,27.2316,79.0188,eNAM/verified
+Firozabad APMC,Firozabad,Uttar Pradesh,27.1521,78.3942,eNAM/verified
+Bulandshahr APMC,Bulandshahr,Uttar Pradesh,28.4070,77.8499,eNAM/verified
+Aligarh APMC,Aligarh,Uttar Pradesh,27.8974,78.0880,eNAM/verified
+Hathras APMC,Hathras,Uttar Pradesh,27.5973,78.0528,eNAM/verified
+Kasganj APMC,Kasganj,Uttar Pradesh,27.8093,78.6464,eNAM/verified
+Farrukhabad APMC,Farrukhabad,Uttar Pradesh,27.3919,79.5786,eNAM/verified
+Hardoi APMC,Hardoi,Uttar Pradesh,27.3960,80.1300,eNAM/verified
+Madhoganj APMC,Hardoi,Uttar Pradesh,27.5500,80.1833,eNAM/verified
+Sandila APMC,Hardoi,Uttar Pradesh,27.0667,80.5167,eNAM/verified
+Shahabad(New Mandi) APMC,Hardoi,Uttar Pradesh,27.6500,79.9333,eNAM/verified
+Barabanki APMC,Barabanki,Uttar Pradesh,26.9277,81.1844,eNAM/verified
+Safdarganj APMC,Barabanki,Uttar Pradesh,26.9500,81.2000,eNAM/verified
+Basti APMC,Basti,Uttar Pradesh,26.8014,82.7285,eNAM/verified
+Akbarpur APMC,Ambedkarnagar,Uttar Pradesh,26.4333,82.5333,eNAM/verified
+Tanda Akbarpur APMC,Ambedkarnagar,Uttar Pradesh,26.5500,82.6833,eNAM/verified
+Jafarganj APMC,Amethi,Uttar Pradesh,26.1500,81.8167,eNAM/verified
+Khalilabad APMC,Sant Kabir Nagar,Uttar Pradesh,26.7833,83.0667,eNAM/verified
+Kushinagar APMC,Kushinagar,Uttar Pradesh,26.7406,83.8893,eNAM/verified
+Partaval APMC,Maharajganj,Uttar Pradesh,27.1333,83.5500,eNAM/verified
+Naugarh APMC,Siddharth Nagar,Uttar Pradesh,27.3167,83.0333,eNAM/verified
+Bishalpur APMC,Pillibhit,Uttar Pradesh,28.3500,79.9667,eNAM/verified
+Powayan APMC,Shahjahanpur,Uttar Pradesh,27.9667,79.9833,eNAM/verified
+Dhanaura APMC,Amroha,Uttar Pradesh,28.6167,78.5500,eNAM/verified
+Sahiyapur APMC,Siddharth Nagar,Uttar Pradesh,27.2500,83.0500,eNAM/verified
+Allahabad City APMC,Prayagraj,Uttar Pradesh,25.4358,81.8463,eNAM/verified
+Chhatarpur APMC,Chhatarpur,Madhya Pradesh,24.9163,79.5937,eNAM/verified
+Tikamgarh APMC,Tikamgarh,Madhya Pradesh,24.7430,78.8302,eNAM/verified
+Jatara APMC,Tikamgarh,Madhya Pradesh,24.5833,78.9167,eNAM/verified
+Niwadi APMC,Tikamgarh,Madhya Pradesh,25.0333,78.7667,eNAM/verified
+Datia APMC,Datia,Madhya Pradesh,25.6688,78.4558,eNAM/verified
+Lashkar APMC,Gwalior,Madhya Pradesh,26.2183,78.1828,eNAM/verified
+Banmorkalan APMC,Morena,Madhya Pradesh,26.4996,78.0040,eNAM/verified
+Karera APMC,Shivpuri,Madhya Pradesh,25.4565,78.1369,eNAM/verified
+Rewa APMC,Rewa,Madhya Pradesh,24.5373,81.2997,eNAM/verified
+Satna APMC,Satna,Madhya Pradesh,24.5733,80.8322,eNAM/verified
+Nagod APMC,Satna,Madhya Pradesh,24.5667,80.5833,eNAM/verified
+Amarpatan APMC,Satna,Madhya Pradesh,24.3000,80.9833,eNAM/verified
+Baikunthpur APMC,Rewa,Madhya Pradesh,24.6833,81.3333,eNAM/verified
+Chaakghat APMC,Rewa,Madhya Pradesh,24.7500,81.3833,eNAM/verified
+Katni APMC,Katni,Madhya Pradesh,23.8336,80.3917,eNAM/verified
+Javera APMC,Damoh,Madhya Pradesh,23.8167,79.4500,eNAM/verified
+Lahar APMC,Bhind,Madhya Pradesh,26.1935,78.9378,eNAM/verified
+Gadarwada APMC,Narsinghpur,Madhya Pradesh,22.9167,78.7833,eNAM/verified
+Lakhnadon APMC,Seoni,Madhya Pradesh,22.6000,79.6000,eNAM/verified
+Beohari APMC,Shehdol,Madhya Pradesh,23.6167,81.3667,eNAM/verified
+Umariya APMC,Umariya,Madhya Pradesh,23.5200,80.8400,eNAM/verified
+Sanawad APMC,Khargone,Madhya Pradesh,22.1800,76.0600,eNAM/verified
+Dhamnod APMC,Dhar,Madhya Pradesh,22.2100,75.4700,eNAM/verified
+Taal APMC,Ratlam,Madhya Pradesh,23.3325,75.0386,eNAM/verified
+Sarangpur APMC,Rajgarh,Madhya Pradesh,23.5644,76.4661,eNAM/verified
+Baktara APMC,Sehore,Madhya Pradesh,23.2000,77.0833,eNAM/verified
