@@ -276,120 +276,190 @@ class AgentResponse:
 # Main agentic loop
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Main chat function — Direct pipeline + single LLM summarisation call
+# ---------------------------------------------------------------------------
+# Architecture:
+#   1. Parse crop/quantity/location from the user message directly
+#   2. Run rank_market_options() in Python (no LLM needed for this)
+#   3. Make ONE stateless LLM call to generate a natural language summary
+#
+# This eliminates multi-turn conversation history entirely, which permanently
+# fixes the '400 Corrupted thought signature' error that occurs when Gemma's
+# internal reasoning tokens are fed back into a subsequent API request.
+# ---------------------------------------------------------------------------
+
+def _parse_query(user_message: str) -> dict | None:
+    """
+    Extract origin, state, commodity, quantity from a natural language message.
+    Returns a dict or None if parsing fails.
+    """
+    import re
+
+    msg = user_message.lower()
+
+    # Quantity — look for a number before 'quintal'
+    qty_match = re.search(r'(\d+(?:\.\d+)?)\s*quintal', msg)
+    quantity = float(qty_match.group(1)) if qty_match else None
+
+    # Commodity — look for known crops
+    crops = ["wheat", "potato", "tomato", "onion", "rice", "maize", "soybean",
+             "mustard", "barley", "jowar", "bajra", "cotton", "sugarcane",
+             "gehu", "aloo", "pyaaz", "chawal"]
+    commodity = None
+    for crop in crops:
+        if crop in msg:
+            commodity = crop.capitalize()
+            break
+
+    # State
+    state = "Uttar Pradesh"
+    if "madhya pradesh" in msg or " mp " in msg:
+        state = "Madhya Pradesh"
+    elif "punjab" in msg:
+        state = "Punjab"
+    elif "haryana" in msg:
+        state = "Haryana"
+    elif "rajasthan" in msg:
+        state = "Rajasthan"
+
+    # Radius
+    radius_match = re.search(r'(\d+)\s*km', msg)
+    radius = float(radius_match.group(1)) if radius_match else settings.default_search_radius_km
+
+    # Origin — everything after "in " or "from "
+    origin = None
+    for pattern in [r'(?:i am in|from|in)\s+([a-z\s]+?)(?:,|\.|please|find|and|$)', ]:
+        m = re.search(pattern, msg)
+        if m:
+            origin = m.group(1).strip().title()
+            break
+
+    if not origin or not commodity or not quantity:
+        return None
+
+    return {
+        "origin": origin,
+        "state": state,
+        "commodity": commodity,
+        "quantity_quintals": quantity,
+        "search_radius_km": radius,
+    }
+
+
 def chat(
     user_message: str,
     history: list[dict] | None = None,
 ) -> AgentResponse:
     """
-    Run a single agentic turn with Gemma 4.
+    Run a single turn: parse query → run Python pipeline → LLM summarises result.
 
     Args:
         user_message:  The farmer's message (English or Hindi).
-        history:       Previous conversation turns as list of
-                       {"role": "user"|"model", "text": str}.
+        history:       Ignored in this architecture (kept for API compatibility).
 
     Returns:
-        AgentResponse with the final reply, tool calls made, and
-        the pipeline result if rank_market_options was called.
+        AgentResponse with the final reply, tool calls made, and pipeline result.
     """
     client = _get_client()
     model = settings.gemma_model
 
-    # Build conversation history
-    contents: list[types.Content] = []
-
-    if history:
-        for turn in history:
-            role = turn.get("role", "user")
-            text = turn.get("text", "")
-            if text:
-                contents.append(
-                    types.UserContent(parts=[types.Part(text=text)])
-                    if role == "user"
-                    else types.ModelContent(parts=[types.Part(text=text)])
-                )
-
-    # Add current user message
-    contents.append(types.UserContent(parts=[types.Part(text=user_message)]))
-
     tool_calls_made: list[str] = []
     pipeline_result: dict | None = None
-    final_reply: str = ""
 
-    # Agentic loop
-    for iteration in range(_MAX_ITERATIONS):
-        logger.info("Agent iteration %d/%d", iteration + 1, _MAX_ITERATIONS)
+    # Step 1 — Parse the query from natural language
+    query = _parse_query(user_message)
 
+    if not query:
+        # Fallback: ask LLM to extract and respond (simple, no tools)
         response = client.models.generate_content(
             model=model,
-            contents=contents,
+            contents=[types.UserContent(parts=[types.Part(text=user_message)])],
             config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                tools=[_ALL_TOOLS],
-                temperature=0.2,  # Low temp for factual tool-use
+                system_instruction=(
+                    "You are MandiMind, an agricultural assistant for Indian farmers. "
+                    "Ask the user politely for their crop name, quantity in quintals, "
+                    "and their city/location so you can find the best mandi for them."
+                ),
+                temperature=0.3,
             ),
         )
+        reply = response.candidates[0].content.parts[-1].text.strip()
+        return AgentResponse(reply=reply, tool_calls_made=[], pipeline_result=None)
 
-        candidate = response.candidates[0]
-        model_parts = candidate.content.parts
+    # Step 2 — Run the Python pipeline directly (no LLM tool call needed)
+    logger.info("Running pipeline: %s", query)
+    tool_calls_made.append("rank_market_options")
 
-        # Separate text parts from function call parts
-        text_parts = [p for p in model_parts if p.text]
-        fc_parts   = [p for p in model_parts if p.function_call]
-
-        # If no function calls — Gemma is done, return the text reply
-        if not fc_parts:
-            final_reply = "\n".join(p.text for p in text_parts if p.text).strip()
-            break
-
-        # Append the model's turn to conversation history.
-        # CRITICAL: Strip internal 'thought' parts — sending them back to the API
-        # causes a '400 Corrupted thought signature' error on Gemma thinking models.
-        safe_parts = [p for p in model_parts if p.function_call or (p.text and not getattr(p, 'thought', False))]
-        contents.append(types.ModelContent(parts=safe_parts))
-
-        # Execute each function call and collect responses
-        tool_response_parts: list[types.Part] = []
-
-        for part in fc_parts:
-            fc = part.function_call
-            fn_name = fc.name
-            fn_args = dict(fc.args)
-
-            logger.info("Gemma called tool: %s(%s)", fn_name, fn_args)
-            tool_calls_made.append(fn_name)
-
-            result = _dispatch_tool(fn_name, fn_args)
-
-            # Save pipeline result for the frontend
-            if fn_name == "rank_market_options":
-                pipeline_result = result
-
-            # Serialize result to JSON string for Gemma
-            result_str = json.dumps(result, default=str, ensure_ascii=False)
-
-            tool_response_parts.append(
-                types.Part(
-                    function_response=types.FunctionResponse(
-                        name=fn_name,
-                        response={"result": result_str},
-                    )
-                )
-            )
-
-        # Append tool responses as a user turn
-        contents.append(types.UserContent(parts=tool_response_parts))
-
-    else:
-        # Hit max iterations — extract whatever text we have
-        logger.warning("Agent hit max iterations (%d)", _MAX_ITERATIONS)
-        final_reply = (
-            "I was unable to complete the analysis within the allowed steps. "
-            "Please try again."
+    try:
+        pipeline_result = rank_market_options(
+            origin=query["origin"],
+            state=query["state"],
+            commodity=query["commodity"],
+            quantity_quintals=query["quantity_quintals"],
+            search_radius_km=query["search_radius_km"],
         )
+    except Exception as exc:
+        logger.error("Pipeline failed: %s", exc, exc_info=True)
+        return AgentResponse(
+            reply="I encountered an error while fetching market data. Please try again.",
+            tool_calls_made=tool_calls_made,
+            pipeline_result=None,
+        )
+
+    # Step 3 — Single stateless LLM call to write a natural language summary
+    if pipeline_result and pipeline_result.get("status") == "ok":
+        top = pipeline_result.get("top_recommendation", {})
+        markets = pipeline_result.get("ranked_markets", [])[:3]
+
+        summary_prompt = (
+            f"A farmer in {query['origin']} wants to sell {query['quantity_quintals']} quintals "
+            f"of {query['commodity']}. Here are the top 3 markets ranked by estimated net return:\n\n"
+        )
+        for i, m in enumerate(markets):
+            summary_prompt += (
+                f"{i+1}. {m.get('market')} ({m.get('district')}): "
+                f"Modal Price ₹{m.get('modal_price')}/q, "
+                f"Distance {m.get('distance_km', 0):.1f} km, "
+                f"Transport Cost ₹{m.get('estimated_transport_cost', 0):.0f}, "
+                f"Net Return ₹{m.get('estimated_net_return', 0):.0f}\n"
+            )
+        summary_prompt += (
+            "\nWrite a 2-sentence recommendation for the farmer explaining which market "
+            "is best and briefly why (considering price vs transport cost tradeoff). "
+            "Be concise and direct. Do not use bullet points or tables."
+        )
+
+        try:
+            summary_response = client.models.generate_content(
+                model=model,
+                contents=[types.UserContent(parts=[types.Part(text=summary_prompt)])],
+                config=types.GenerateContentConfig(temperature=0.3),
+            )
+            # Get last text part to skip any thought parts
+            text_parts = [
+                p.text for p in summary_response.candidates[0].content.parts
+                if p.text and not getattr(p, 'thought', False)
+            ]
+            final_reply = text_parts[-1].strip() if text_parts else (
+                f"Based on current data, I recommend selling at {top.get('market')} "
+                f"for the highest estimated net return of ₹{top.get('estimated_net_return', 0):,.0f}."
+            )
+        except Exception as exc:
+            logger.warning("LLM summary failed, using fallback: %s", exc)
+            final_reply = (
+                f"Based on current data, I recommend selling your {query['quantity_quintals']} quintals "
+                f"of {query['commodity']} at {top.get('market', 'the top market')}. "
+                f"It offers the highest estimated net return of "
+                f"₹{top.get('estimated_net_return', 0):,.0f}."
+            )
+    else:
+        msg = pipeline_result.get("message", "No markets found.") if pipeline_result else "Pipeline returned no data."
+        final_reply = f"I could not find suitable markets for your query. {msg}"
 
     return AgentResponse(
         reply=final_reply,
         tool_calls_made=tool_calls_made,
         pipeline_result=pipeline_result,
     )
+
