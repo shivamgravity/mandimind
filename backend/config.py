@@ -1,9 +1,13 @@
 """
 config.py — Application settings loaded from environment variables.
 
-All secrets are read from .env (never committed).
+Supports three secret sources (in priority order):
+  1. Real environment variables (set by the OS / docker)
+  2. .env file (local development)
+  3. Streamlit st.secrets (Streamlit Cloud deployment)
 """
 
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,10 +34,25 @@ class Settings(BaseSettings):
     # Search
     default_search_radius_km: float = 150.0
 
-    # Server
-    backend_host: str = "0.0.0.0"
-    backend_port: int = 8000
+
+def _apply_streamlit_secrets(s: Settings) -> Settings:
+    """
+    If running on Streamlit Cloud, pull missing keys from st.secrets.
+    This is a no-op when Streamlit is not installed or secrets are not set.
+    """
+    try:
+        import streamlit as st  # noqa: PLC0415
+        secrets = st.secrets  # raises if not in a Streamlit context
+        if not s.data_gov_api_key:
+            s.data_gov_api_key = secrets.get("DATA_GOV_API_KEY", "")
+        if not s.gemini_api_key:
+            s.gemini_api_key = secrets.get("GEMINI_API_KEY", "")
+        if not s.gemma_model or s.gemma_model == "gemma-4-26b-a4b-it":
+            s.gemma_model = secrets.get("GEMMA_MODEL", s.gemma_model)
+    except Exception:
+        pass  # Not running in Streamlit — skip silently
+    return s
 
 
 # Singleton — import this everywhere
-settings = Settings()
+settings = _apply_streamlit_secrets(Settings())
