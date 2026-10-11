@@ -2,6 +2,8 @@
 
 > **An Agentic AI decision-support platform empowering Indian farmers to maximize their crop profits through real-time mandi data, distance optimization, and intelligent market comparison.**
 
+**Kaggle Writeup:** [Build with Gemma - TFUG AI Prayagraj Hackathon Writeup - Mandi Mind](https://www.kaggle.com/competitions/build-with-gemma-tfug-prayagraj-ai-prayagraj/writeups/mandi-mind)
+
 ---
 
 ## 🏆 The Problem
